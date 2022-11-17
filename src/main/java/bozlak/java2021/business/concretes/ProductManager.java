@@ -96,11 +96,35 @@ public class ProductManager implements ProductService {
         }
         return false;
     }
+
     private boolean notNegativeInitsInStock(int unitsInStock) {
         if (unitsInStock >= 0) {
             return true;
         }
         return false;
+    }
+
+    private boolean existsProductById(int productId) {
+        return this.productRepository.existsById(productId);
+    }
+
+    @Override
+    public Result getById(int productId) {
+        if (!existsProductById(productId)) {
+            return new ErrorResult("ID'si " + productId + " olan bir ürün yok!");
+        }
+
+        ProductResponseWithCategoryId productResponseWithCategoryId = new ProductResponseWithCategoryId();
+        Product product = this.productRepository.getReferenceById(productId);
+        productResponseWithCategoryId.setProductId(productId);
+        productResponseWithCategoryId.setCategoryId(product.getCategoryId());
+        productResponseWithCategoryId.setProductName(product.getName());
+        productResponseWithCategoryId.setUnitPrice(product.getUnitPrice());
+        productResponseWithCategoryId.setUnitsInStock(product.getUnitsInStock());
+        productResponseWithCategoryId.setQuantityPerUnit(product.getQuantityPerUnit());
+
+        String message = "ID'si " + productId + " olan ürün getirildi";
+        return new SuccessDataResult<ProductResponseWithCategoryId>(message, productResponseWithCategoryId);
     }
     
 }

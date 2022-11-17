@@ -9,5 +9,6 @@ import bozlak.java2021.dtos.product.ProductResponseWithCategoryId;
 
 public interface ProductService {
     DataResult<List<ProductResponseWithCategoryId>> getAll();
+    Result getById(int productId);
     Result add(CreateProductRequest createProductRequest);
 }
