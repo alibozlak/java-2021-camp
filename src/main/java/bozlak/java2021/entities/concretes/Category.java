@@ -13,31 +13,22 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "products")
+@Table(name = "categories")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Product {
+public class Category {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "product_id")
+    @Column(name = "category_id")
     private int id;
 
-    @Column(name = "category_id")
-    private int categoryId;
-
-    @Column(name = "product_name")
+    @Column(name = "category_name")
     private String name;
-
-    @Column(name = "unit_price")
-    private double unitPrice;
-
-    @Column(name = "units_in_stock")
-    private int unitsInStock;
-
-    @Column(name = "quantity_per_unit")
-    private String quantityPerUnit;
+    
+    @Column(name = "description")
+    private String description;
 
 }
