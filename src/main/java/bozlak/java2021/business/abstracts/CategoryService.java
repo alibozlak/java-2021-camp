@@ -1,11 +1,11 @@
 package bozlak.java2021.business.abstracts;
 
-import java.util.List;
-
-import bozlak.java2021.core.utilities.results.DataResult;
 import bozlak.java2021.dtos.category.CategoryResponseWithoutPicture;
+import bozlak.java2021.dtos.category.CreateCategoryRequestWithoutPicture;
+import bozlak.java2021.dtos.category.UpdateCategoryRequestWithoutPicture;
 
-public interface CategoryService {
-    DataResult<List<CategoryResponseWithoutPicture>> getAll();
+public interface CategoryService extends BaseService<
+    CreateCategoryRequestWithoutPicture, UpdateCategoryRequestWithoutPicture, CategoryResponseWithoutPicture
+    >{
     boolean existCategoryById(int categoryId);
 }

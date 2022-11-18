@@ -14,6 +14,7 @@ import bozlak.java2021.core.utilities.results.SuccessDataResult;
 import bozlak.java2021.core.utilities.results.SuccessResult;
 import bozlak.java2021.dtos.product.CreateProductRequest;
 import bozlak.java2021.dtos.product.ProductResponseWithCategoryId;
+import bozlak.java2021.dtos.product.UpdateProductRequest;
 import bozlak.java2021.entities.concretes.Product;
 import bozlak.java2021.repository.abstracts.ProductRepository;
 
@@ -125,6 +126,18 @@ public class ProductManager implements ProductService {
 
         String message = "ID'si " + productId + " olan ürün getirildi";
         return new SuccessDataResult<ProductResponseWithCategoryId>(message, productResponseWithCategoryId);
+    }
+
+    @Override
+    public Result update(UpdateProductRequest updateEntityRequest) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Result deleteById(int id) {
+        // TODO Auto-generated method stub
+        return null;
     }
     
 }
