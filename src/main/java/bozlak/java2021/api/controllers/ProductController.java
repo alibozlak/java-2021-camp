@@ -2,9 +2,11 @@ package bozlak.java2021.api.controllers;
 
 import java.util.List;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,6 +16,7 @@ import bozlak.java2021.core.utilities.results.DataResult;
 import bozlak.java2021.core.utilities.results.Result;
 import bozlak.java2021.dtos.product.CreateProductRequest;
 import bozlak.java2021.dtos.product.ProductResponseWithCategoryId;
+import bozlak.java2021.dtos.product.UpdateProductRequest;
 
 @RestController
 @RequestMapping(path = "/api/products")
@@ -38,5 +41,15 @@ public class ProductController {
     @PostMapping
     public Result add(@RequestBody CreateProductRequest createProductRequest) {
         return this.productService.add(createProductRequest);
+    }
+
+    @DeleteMapping(path = "/delete-by-id/{productId}")
+    public Result deleteById(@PathVariable int productId) {
+        return this.productService.deleteById(productId);
+    }
+
+    @PutMapping
+    public Result update(@RequestBody UpdateProductRequest updateProductRequest) {
+        return this.productService.update(updateProductRequest);
     }
 }

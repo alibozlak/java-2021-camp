@@ -130,14 +130,49 @@ public class ProductManager implements ProductService {
 
     @Override
     public Result update(UpdateProductRequest updateEntityRequest) {
-        // TODO Auto-generated method stub
-        return null;
+        int productId = updateEntityRequest.getProductId();
+        int categoryId = updateEntityRequest.getCategoryId();
+        String productName = updateEntityRequest.getProductName();
+        double unitPrice = updateEntityRequest.getUnitPrice();
+        int unitsInStock = updateEntityRequest.getUnitsInStock();
+
+        if (!existsProductById(productId)) {
+            return new ErrorResult("ID'si "+ productId + " olan bir ürün yok!");
+        }
+        if (!existsCategoryById(categoryId)) {
+            return new ErrorResult("ID'si " + categoryId + " olan bir kategori yok!");
+        }
+        if (isProductNameEmpty(productName)) {
+            return new ErrorResult("Ürün ismi boş geçilemez!");
+        }
+        if (!notNegativeUnitPrice(unitPrice)) {
+            return new ErrorResult("Ürün fiyatı 0'dan küçük olamaz! Girilen fiyat : " + unitPrice);
+        }
+        if (!notNegativeInitsInStock(unitsInStock)) {
+            String message = "Stoktaki ürün adedi 0'dan küçük olamaz. Girilen adet : " + unitsInStock;
+            return new ErrorResult(message);
+        }
+
+        Product product = new Product();
+        product.setId(productId);
+        product.setCategoryId(categoryId);
+        product.setName(productName);
+        product.setUnitPrice(unitPrice);
+        product.setUnitsInStock(unitsInStock);
+        product.setQuantityPerUnit(updateEntityRequest.getQuantityPerUnit());
+
+        this.productRepository.save(product);
+        return new SuccessResult(productName + " adlı ürün güncellendi");
     }
 
     @Override
     public Result deleteById(int id) {
-        // TODO Auto-generated method stub
-        return null;
+        if (!existsProductById(id)) {
+            return new ErrorResult("ID'si " + id + " olan bir ürün yok!");
+        }
+
+        this.productRepository.deleteById(id);
+        return new SuccessResult("ID'si "+ id + " olan ürün veritabanından silindi");
     }
     
 }
