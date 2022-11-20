@@ -12,5 +12,6 @@ public interface ProductService extends BaseService<
     >{
     
     DataResult<List<ProductResponseWithCategoryId>> getByProductName(String productName);
+    DataResult<List<ProductResponseWithCategoryId>> getByProductNameAndCategoryId(String productName, int categoryId);
 
 }

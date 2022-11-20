@@ -58,4 +58,10 @@ public class ProductController {
     public DataResult<List<ProductResponseWithCategoryId>> getByProductName(@RequestParam String productName) {
         return this.productService.getByProductName(productName);
     }
+
+    @GetMapping(path = "/get-by-product-name-and-category-id")
+    public DataResult<List<ProductResponseWithCategoryId>> getByProductNameAndCategoryId
+        (@RequestParam(name = "productName") String productName,@RequestParam(name = "categoryId") int categoryId) {
+        return this.productService.getByProductNameAndCategoryId(productName, categoryId);
+    }
 }

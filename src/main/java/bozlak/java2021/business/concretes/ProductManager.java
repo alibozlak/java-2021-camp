@@ -198,5 +198,25 @@ public class ProductManager implements ProductService {
         String message = "Adı '" + productName + "' olan ürünler getirildi.";
         return new SuccessDataResult<List<ProductResponseWithCategoryId>>(message, productResponseWithCategoryIds);
     }
+
+    @Override
+    public DataResult<List<ProductResponseWithCategoryId>> getByProductNameAndCategoryId(String productName,
+            int categoryId) {
+        List<Product> products = this.productRepository.getByProductNameAndCategory(productName, categoryId);
+        List<ProductResponseWithCategoryId> productResponseWithCategoryIds = new ArrayList<>();
+        for (Product product : products) {
+            ProductResponseWithCategoryId productResponseWithCategoryId = new ProductResponseWithCategoryId();
+            productResponseWithCategoryId.setProductId(product.getId());
+            productResponseWithCategoryId.setCategoryId(product.getCategory().getId());
+            productResponseWithCategoryId.setProductName(product.getName());
+            productResponseWithCategoryId.setUnitPrice(product.getUnitPrice());
+            productResponseWithCategoryId.setUnitsInStock(product.getUnitsInStock());
+            productResponseWithCategoryId.setQuantityPerUnit(product.getQuantityPerUnit());
+
+            productResponseWithCategoryIds.add(productResponseWithCategoryId);
+        }
+        String message = "Adı '" + productName + "' ve kategori ID'si " + categoryId + " olan ürünler getirildi.";
+        return new SuccessDataResult<List<ProductResponseWithCategoryId>>(message, productResponseWithCategoryIds);
+    }
     
 }
