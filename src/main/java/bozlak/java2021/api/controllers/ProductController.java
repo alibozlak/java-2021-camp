@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import bozlak.java2021.business.abstracts.ProductService;
@@ -51,5 +52,10 @@ public class ProductController {
     @PutMapping
     public Result update(@RequestBody UpdateProductRequest updateProductRequest) {
         return this.productService.update(updateProductRequest);
+    }
+
+    @GetMapping(path = "/get-by-product-name")
+    public DataResult<List<ProductResponseWithCategoryId>> getByProductName(@RequestParam String productName) {
+        return this.productService.getByProductName(productName);
     }
 }
