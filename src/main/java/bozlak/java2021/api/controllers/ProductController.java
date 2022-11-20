@@ -2,6 +2,7 @@ package bozlak.java2021.api.controllers;
 
 import java.util.List;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,6 +22,7 @@ import bozlak.java2021.dtos.product.UpdateProductRequest;
 
 @RestController
 @RequestMapping(path = "/api/products")
+@CrossOrigin
 public class ProductController {
     
     private ProductService productService;
