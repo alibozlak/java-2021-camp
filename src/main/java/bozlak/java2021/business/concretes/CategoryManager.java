@@ -139,6 +139,11 @@ public class CategoryManager implements CategoryService {
         return false;
     }
 
+    @Override
+    public Category getCategoryById(int categoryId) {
+        return this.categoryRepository.getReferenceById(categoryId);
+    }
+
     // private boolean isCategoryUseProductsTable(int categoryId) {
     //     List<ProductResponseWithCategoryId> productResponseWithCategoryIds
     //     = this.productService.getAll().getData();

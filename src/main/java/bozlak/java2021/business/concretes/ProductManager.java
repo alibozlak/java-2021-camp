@@ -15,6 +15,7 @@ import bozlak.java2021.core.utilities.results.SuccessResult;
 import bozlak.java2021.dtos.product.CreateProductRequest;
 import bozlak.java2021.dtos.product.ProductResponseWithCategoryId;
 import bozlak.java2021.dtos.product.UpdateProductRequest;
+import bozlak.java2021.entities.concretes.Category;
 import bozlak.java2021.entities.concretes.Product;
 import bozlak.java2021.repository.abstracts.ProductRepository;
 
@@ -40,7 +41,7 @@ public class ProductManager implements ProductService {
             productResponseWithCategoryId.setUnitPrice(product.getUnitPrice());
             productResponseWithCategoryId.setUnitsInStock(product.getUnitsInStock());
             productResponseWithCategoryId.setQuantityPerUnit(product.getQuantityPerUnit());
-            productResponseWithCategoryId.setCategoryId(product.getCategoryId());
+            productResponseWithCategoryId.setCategoryId(product.getCategory().getId());
 
             productResponseWithCategoryIds.add(productResponseWithCategoryId);
         }
@@ -70,7 +71,8 @@ public class ProductManager implements ProductService {
         }
 
         Product product = new Product();
-        product.setCategoryId(categoryId);
+        Category category = this.categoryService.getCategoryById(categoryId);
+        product.setCategory(category);
         product.setName(productName);
         product.setUnitPrice(unitPrice);
         product.setUnitsInStock(unitsInStock);
@@ -118,7 +120,7 @@ public class ProductManager implements ProductService {
         ProductResponseWithCategoryId productResponseWithCategoryId = new ProductResponseWithCategoryId();
         Product product = this.productRepository.getReferenceById(productId);
         productResponseWithCategoryId.setProductId(productId);
-        productResponseWithCategoryId.setCategoryId(product.getCategoryId());
+        productResponseWithCategoryId.setCategoryId(product.getCategory().getId());
         productResponseWithCategoryId.setProductName(product.getName());
         productResponseWithCategoryId.setUnitPrice(product.getUnitPrice());
         productResponseWithCategoryId.setUnitsInStock(product.getUnitsInStock());
@@ -155,7 +157,8 @@ public class ProductManager implements ProductService {
 
         Product product = new Product();
         product.setId(productId);
-        product.setCategoryId(categoryId);
+        Category category = this.categoryService.getCategoryById(categoryId);
+        product.setCategory(category);
         product.setName(productName);
         product.setUnitPrice(unitPrice);
         product.setUnitsInStock(unitsInStock);
@@ -173,6 +176,27 @@ public class ProductManager implements ProductService {
 
         this.productRepository.deleteById(id);
         return new SuccessResult("ID'si "+ id + " olan ürün veritabanından silindi");
+    }
+
+    @Override
+    public DataResult<List<ProductResponseWithCategoryId>> getByProductName(String productName) {
+        List<Product> products = this.productRepository.getByName(productName);
+        List<ProductResponseWithCategoryId> productResponseWithCategoryIds = new ArrayList<>();
+        for (Product product : products) {
+            ProductResponseWithCategoryId productResponseWithCategoryId 
+            = new ProductResponseWithCategoryId();
+
+            productResponseWithCategoryId.setProductId(product.getId());
+            productResponseWithCategoryId.setCategoryId(product.getCategory().getId());
+            productResponseWithCategoryId.setProductName(product.getName());
+            productResponseWithCategoryId.setUnitPrice(product.getUnitPrice());
+            productResponseWithCategoryId.setUnitsInStock(product.getUnitsInStock());
+            productResponseWithCategoryId.setQuantityPerUnit(product.getQuantityPerUnit());
+
+            productResponseWithCategoryIds.add(productResponseWithCategoryId);
+        }
+        String message = "Adı '" + productName + "' olan ürünler getirildi.";
+        return new SuccessDataResult<List<ProductResponseWithCategoryId>>(message, productResponseWithCategoryIds);
     }
     
 }
