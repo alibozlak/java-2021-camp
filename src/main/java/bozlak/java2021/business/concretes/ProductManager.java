@@ -12,7 +12,9 @@ import bozlak.java2021.core.utilities.results.ErrorResult;
 import bozlak.java2021.core.utilities.results.Result;
 import bozlak.java2021.core.utilities.results.SuccessDataResult;
 import bozlak.java2021.core.utilities.results.SuccessResult;
+import bozlak.java2021.dtos.category.CategoryResponseWithoutPicture;
 import bozlak.java2021.dtos.product.CreateProductRequest;
+import bozlak.java2021.dtos.product.ProductResponseWithCategory;
 import bozlak.java2021.dtos.product.ProductResponseWithCategoryId;
 import bozlak.java2021.dtos.product.UpdateProductRequest;
 import bozlak.java2021.entities.concretes.Category;
@@ -31,22 +33,26 @@ public class ProductManager implements ProductService {
     }
 
     @Override
-    public DataResult<List<ProductResponseWithCategoryId>> getAll() {
+    public DataResult<List<ProductResponseWithCategory>> getAll() {
+        List<ProductResponseWithCategory> productResponseWithCategories = new ArrayList<>();
         List<Product> products = this.productRepository.findAll();
-        List<ProductResponseWithCategoryId> productResponseWithCategoryIds = new ArrayList<>();
         for (Product product : products) {
-            ProductResponseWithCategoryId productResponseWithCategoryId = new ProductResponseWithCategoryId();
-            productResponseWithCategoryId.setProductId(product.getId());
-            productResponseWithCategoryId.setProductName(product.getName());
-            productResponseWithCategoryId.setUnitPrice(product.getUnitPrice());
-            productResponseWithCategoryId.setUnitsInStock(product.getUnitsInStock());
-            productResponseWithCategoryId.setQuantityPerUnit(product.getQuantityPerUnit());
-            productResponseWithCategoryId.setCategoryId(product.getCategory().getId());
+            ProductResponseWithCategory productResponseWithCategory = new ProductResponseWithCategory();
+            productResponseWithCategory.setProductId(product.getId());
+            productResponseWithCategory.setProductName(product.getName());
+            productResponseWithCategory.setUnitPrice(product.getUnitPrice());
+            productResponseWithCategory.setUnitsInStock(product.getUnitsInStock());
+            productResponseWithCategory.setQuantityPerUnit(product.getQuantityPerUnit());
+            CategoryResponseWithoutPicture categoryResponseWithoutPicture = new CategoryResponseWithoutPicture();
+            categoryResponseWithoutPicture.setCategoryId(product.getCategory().getId());
+            categoryResponseWithoutPicture.setCategoryName(product.getCategory().getName());
+            categoryResponseWithoutPicture.setDescription(product.getCategory().getDescription());
+            productResponseWithCategory.setCategoryResponseWithoutPicture(categoryResponseWithoutPicture);
 
-            productResponseWithCategoryIds.add(productResponseWithCategoryId);
+            productResponseWithCategories.add(productResponseWithCategory);
         }
-        String message = "Tüm ürünler listelendi";
-        return new SuccessDataResult<List<ProductResponseWithCategoryId>>(message,productResponseWithCategoryIds);
+        String message = "Tüm ürünler kategoriyle birlikte getirildi.";
+        return new SuccessDataResult<List<ProductResponseWithCategory>>(message, productResponseWithCategories);
     }
 
     @Override
@@ -117,17 +123,21 @@ public class ProductManager implements ProductService {
             return new ErrorResult("ID'si " + productId + " olan bir ürün yok!");
         }
 
-        ProductResponseWithCategoryId productResponseWithCategoryId = new ProductResponseWithCategoryId();
+        ProductResponseWithCategory productResponseWithCategory = new ProductResponseWithCategory();
         Product product = this.productRepository.getReferenceById(productId);
-        productResponseWithCategoryId.setProductId(productId);
-        productResponseWithCategoryId.setCategoryId(product.getCategory().getId());
-        productResponseWithCategoryId.setProductName(product.getName());
-        productResponseWithCategoryId.setUnitPrice(product.getUnitPrice());
-        productResponseWithCategoryId.setUnitsInStock(product.getUnitsInStock());
-        productResponseWithCategoryId.setQuantityPerUnit(product.getQuantityPerUnit());
+        productResponseWithCategory.setProductId(product.getId());
+        productResponseWithCategory.setProductName(product.getName());
+        productResponseWithCategory.setUnitPrice(product.getUnitPrice());
+        productResponseWithCategory.setUnitsInStock(product.getUnitsInStock());
+        productResponseWithCategory.setQuantityPerUnit(product.getQuantityPerUnit());
+        CategoryResponseWithoutPicture categoryResponseWithoutPicture = new CategoryResponseWithoutPicture();
+        categoryResponseWithoutPicture.setCategoryId(product.getCategory().getId());
+        categoryResponseWithoutPicture.setCategoryName(product.getCategory().getName());
+        categoryResponseWithoutPicture.setDescription(product.getCategory().getDescription());
+        productResponseWithCategory.setCategoryResponseWithoutPicture(categoryResponseWithoutPicture);
 
-        String message = "ID'si " + productId + " olan ürün getirildi";
-        return new SuccessDataResult<ProductResponseWithCategoryId>(message, productResponseWithCategoryId);
+        String message = "ID'si " + productId + " olan ürün getirildi.";
+        return new SuccessDataResult<ProductResponseWithCategory>(message, productResponseWithCategory);
     }
 
     @Override
@@ -217,6 +227,57 @@ public class ProductManager implements ProductService {
         }
         String message = "Adı '" + productName + "' ve kategori ID'si " + categoryId + " olan ürünler getirildi.";
         return new SuccessDataResult<List<ProductResponseWithCategoryId>>(message, productResponseWithCategoryIds);
+    }
+
+    @Override
+    public DataResult<List<ProductResponseWithCategory>> getByProductNameContains(String productNameSearch) {
+        List<Product> products = this.productRepository.getByNameContains(productNameSearch);
+        List<ProductResponseWithCategory> productResponseWithCategories = new ArrayList<>();
+        for (Product product : products) {
+            ProductResponseWithCategory productResponseWithCategory = new ProductResponseWithCategory();
+            productResponseWithCategory.setProductId(product.getId());
+            productResponseWithCategory.setProductName(product.getName());
+            productResponseWithCategory.setUnitPrice(product.getUnitPrice());
+            productResponseWithCategory.setUnitsInStock(product.getUnitsInStock());
+            productResponseWithCategory.setQuantityPerUnit(product.getQuantityPerUnit());
+            CategoryResponseWithoutPicture categoryResponseWithoutPicture = new CategoryResponseWithoutPicture();
+            categoryResponseWithoutPicture.setCategoryId(product.getCategory().getId());
+            categoryResponseWithoutPicture.setCategoryName(product.getCategory().getName());
+            categoryResponseWithoutPicture.setDescription(product.getCategory().getDescription());
+            productResponseWithCategory.setCategoryResponseWithoutPicture(categoryResponseWithoutPicture);
+
+            productResponseWithCategories.add(productResponseWithCategory);
+        }
+        String message = "İsminde '" + productNameSearch + "' geçen ürünler getirildi.";
+        return new SuccessDataResult<List<ProductResponseWithCategory>>(message, productResponseWithCategories);
+    }
+
+    @Override
+    public DataResult<List<ProductResponseWithCategory>> getByCategoryIdIn(List<Integer> categoryIds) {
+        List<Product> products = this.productRepository.getByCategory_IdIn(categoryIds);
+        List<ProductResponseWithCategory> productResponseWithCategories = new ArrayList<>();
+        for (Product product : products) {
+            ProductResponseWithCategory productResponseWithCategory = new ProductResponseWithCategory();
+            productResponseWithCategory.setProductId(product.getId());
+            productResponseWithCategory.setProductName(product.getName());
+            productResponseWithCategory.setUnitPrice(product.getUnitPrice());
+            productResponseWithCategory.setUnitsInStock(product.getUnitsInStock());
+            productResponseWithCategory.setQuantityPerUnit(product.getQuantityPerUnit());
+            CategoryResponseWithoutPicture categoryResponseWithoutPicture = new CategoryResponseWithoutPicture();
+            categoryResponseWithoutPicture.setCategoryId(product.getCategory().getId());
+            categoryResponseWithoutPicture.setCategoryName(product.getCategory().getName());
+            categoryResponseWithoutPicture.setDescription(product.getCategory().getDescription());
+            productResponseWithCategory.setCategoryResponseWithoutPicture(categoryResponseWithoutPicture);
+
+            productResponseWithCategories.add(productResponseWithCategory);
+        }
+        String message = "Kategori ID'si ";
+        for (Integer categoryId : categoryIds) {
+            message += categoryId + ", ";
+        }
+        message = message.substring(0, message.length()-2);
+        message += " olan ürünler getirildi.";
+        return new SuccessDataResult<List<ProductResponseWithCategory>>(message, productResponseWithCategories);
     }
     
 }
