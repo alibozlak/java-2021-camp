@@ -78,4 +78,15 @@ public class ProductController {
     public DataResult<List<ProductResponseWithCategory>> getByCategoryIdIn(@RequestParam List<Integer> categoryIds) {
         return this.productService.getByCategoryIdIn(categoryIds);
     }
+
+    @GetMapping(path =  "/get-all-by-pageable")
+    DataResult<List<ProductResponseWithCategory>> getAll
+        (@RequestParam(name = "pageNo") int pageNo, @RequestParam(name = "pageSize") int pageSize) {
+        return this.productService.getAll(pageNo, pageSize);
+    }
+
+    @GetMapping(path = "/get-all-by-product-name-sorted-desc")
+    public DataResult<List<ProductResponseWithCategory>> getAllByProductNameSortedDesc() {
+        return this.productService.getAllByProductNameSortedDesc();
+    }
 }

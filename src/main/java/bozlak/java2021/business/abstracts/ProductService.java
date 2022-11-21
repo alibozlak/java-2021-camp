@@ -17,4 +17,7 @@ public interface ProductService extends BaseService<
 
     DataResult<List<ProductResponseWithCategory>> getByProductNameContains(String productNameSearch);
     DataResult<List<ProductResponseWithCategory>> getByCategoryIdIn(List<Integer> categoryIds);
+
+    DataResult<List<ProductResponseWithCategory>> getAll(int pageNo, int pageSize);
+    DataResult<List<ProductResponseWithCategory>> getAllByProductNameSortedDesc();
 }

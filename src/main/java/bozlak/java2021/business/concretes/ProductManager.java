@@ -3,6 +3,9 @@ package bozlak.java2021.business.concretes;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import bozlak.java2021.business.abstracts.CategoryService;
@@ -277,6 +280,56 @@ public class ProductManager implements ProductService {
         }
         message = message.substring(0, message.length()-2);
         message += " olan ürünler getirildi.";
+        return new SuccessDataResult<List<ProductResponseWithCategory>>(message, productResponseWithCategories);
+    }
+
+    @Override
+    public DataResult<List<ProductResponseWithCategory>> getAll(int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo-1, pageSize);
+        List<Product> products = this.productRepository.findAll(pageable).getContent();
+
+        List<ProductResponseWithCategory> productResponseWithCategories = new ArrayList<>();
+        for (Product product : products) {
+            ProductResponseWithCategory productResponseWithCategory = new ProductResponseWithCategory();
+            productResponseWithCategory.setProductId(product.getId());
+            productResponseWithCategory.setProductName(product.getName());
+            productResponseWithCategory.setUnitPrice(product.getUnitPrice());
+            productResponseWithCategory.setUnitsInStock(product.getUnitsInStock());
+            productResponseWithCategory.setQuantityPerUnit(product.getQuantityPerUnit());
+            CategoryResponseWithoutPicture categoryResponseWithoutPicture = new CategoryResponseWithoutPicture();
+            categoryResponseWithoutPicture.setCategoryId(product.getCategory().getId());
+            categoryResponseWithoutPicture.setCategoryName(product.getCategory().getName());
+            categoryResponseWithoutPicture.setDescription(product.getCategory().getDescription());
+            productResponseWithCategory.setCategoryResponseWithoutPicture(categoryResponseWithoutPicture);
+
+            productResponseWithCategories.add(productResponseWithCategory);
+        }
+        String message = "Her bir sayfasında " + pageSize + " kadar ürün olan sayfalardan " + pageNo + ". sayfa getirildi.";
+        return new SuccessDataResult<List<ProductResponseWithCategory>>(message, productResponseWithCategories);
+    }
+
+    @Override
+    public DataResult<List<ProductResponseWithCategory>> getAllByProductNameSortedDesc() {
+        Sort sort = Sort.by(Sort.Direction.DESC, "name");
+        List<Product> products = this.productRepository.findAll(sort);
+
+        List<ProductResponseWithCategory> productResponseWithCategories = new ArrayList<>();
+        for (Product product : products) {
+            ProductResponseWithCategory productResponseWithCategory = new ProductResponseWithCategory();
+            productResponseWithCategory.setProductId(product.getId());
+            productResponseWithCategory.setProductName(product.getName());
+            productResponseWithCategory.setUnitPrice(product.getUnitPrice());
+            productResponseWithCategory.setUnitsInStock(product.getUnitsInStock());
+            productResponseWithCategory.setQuantityPerUnit(product.getQuantityPerUnit());
+            CategoryResponseWithoutPicture categoryResponseWithoutPicture = new CategoryResponseWithoutPicture();
+            categoryResponseWithoutPicture.setCategoryId(product.getCategory().getId());
+            categoryResponseWithoutPicture.setCategoryName(product.getCategory().getName());
+            categoryResponseWithoutPicture.setDescription(product.getCategory().getDescription());
+            productResponseWithCategory.setCategoryResponseWithoutPicture(categoryResponseWithoutPicture);
+
+            productResponseWithCategories.add(productResponseWithCategory);
+        }
+        String message = "Ürünler ismine göre sondan başa doğru getirildi";
         return new SuccessDataResult<List<ProductResponseWithCategory>>(message, productResponseWithCategories);
     }
     
