@@ -20,6 +20,7 @@ import bozlak.java2021.dtos.product.CreateProductRequest;
 import bozlak.java2021.dtos.product.ProductResponseWithCategory;
 import bozlak.java2021.dtos.product.ProductResponseWithCategoryId;
 import bozlak.java2021.dtos.product.UpdateProductRequest;
+import bozlak.java2021.entities.dtos.ProductWithCategoryDto;
 
 @RestController
 @RequestMapping(path = "/api/products")
@@ -88,5 +89,13 @@ public class ProductController {
     @GetMapping(path = "/get-all-by-product-name-sorted-desc")
     public DataResult<List<ProductResponseWithCategory>> getAllByProductNameSortedDesc() {
         return this.productService.getAllByProductNameSortedDesc();
+    }
+
+    /**
+     * 2021 Java - 9. Lecture
+     */
+    @GetMapping(path = "/get-product-with-category-names")
+    public DataResult<List<ProductWithCategoryDto>> getProductsWithCategoryNames() {
+        return this.productService.getProductWithCategoryDetails();
     }
 }

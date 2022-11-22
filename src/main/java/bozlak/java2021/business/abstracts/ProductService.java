@@ -7,6 +7,7 @@ import bozlak.java2021.dtos.product.CreateProductRequest;
 import bozlak.java2021.dtos.product.ProductResponseWithCategory;
 import bozlak.java2021.dtos.product.ProductResponseWithCategoryId;
 import bozlak.java2021.dtos.product.UpdateProductRequest;
+import bozlak.java2021.entities.dtos.ProductWithCategoryDto;
 
 public interface ProductService extends BaseService<
     CreateProductRequest, UpdateProductRequest, ProductResponseWithCategory
@@ -20,4 +21,9 @@ public interface ProductService extends BaseService<
 
     DataResult<List<ProductResponseWithCategory>> getAll(int pageNo, int pageSize);
     DataResult<List<ProductResponseWithCategory>> getAllByProductNameSortedDesc();
+
+    /**
+     * 2021 Java, 9. ders. DTO konusu
+     */
+    DataResult<List<ProductWithCategoryDto>> getProductWithCategoryDetails();
 }

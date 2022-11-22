@@ -22,6 +22,7 @@ import bozlak.java2021.dtos.product.ProductResponseWithCategoryId;
 import bozlak.java2021.dtos.product.UpdateProductRequest;
 import bozlak.java2021.entities.concretes.Category;
 import bozlak.java2021.entities.concretes.Product;
+import bozlak.java2021.entities.dtos.ProductWithCategoryDto;
 import bozlak.java2021.repository.abstracts.ProductRepository;
 
 @Service
@@ -331,6 +332,16 @@ public class ProductManager implements ProductService {
         }
         String message = "Ürünler ismine göre sondan başa doğru getirildi";
         return new SuccessDataResult<List<ProductResponseWithCategory>>(message, productResponseWithCategories);
+    }
+
+    /**
+     * 2021 Java, 9. ders. DTO konusu
+     */
+    @Override
+    public DataResult<List<ProductWithCategoryDto>> getProductWithCategoryDetails() {
+        List<ProductWithCategoryDto> productWithCategoryDtos = this.productRepository.getProductWithCategoryDetails();
+        String message = "Ürün ID'si, ürün ismi ve kategori ismi olan DTO'lar getirildi.";
+        return new SuccessDataResult<List<ProductWithCategoryDto>>(message, productWithCategoryDtos);
     }
     
 }
